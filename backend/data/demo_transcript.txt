@@ -1,0 +1,11 @@
+Customer Success Manager (CSM): Hi Sarah, thanks for hopping on our quarterly sync today. How have things been going with the platform over at TechBridge?
+
+Sarah (TechBridge Admin): To be completely honest, we've been struggling. The recent downtime really hurt our support operations, and we are not seeing the ROI we expected. Our team is complaining about the complex interface.
+
+CSM: I'm really sorry to hear that. I know the uptime issue last month was frustrating. Let's dive into the ROI concern. What features are they finding difficult?
+
+Sarah: It's mostly the dashboard setup and reporting module. It takes hours to get a simple report. Because of this, my director is questioning our budget. If we can't get this resolved soon, we might have to look at other options. We're about 10 months into our 12-month contract, and renewal is definitely not guaranteed at this rate.
+
+CSM: I completely understand. Your health score has dropped, and we want to turn this around. I'd like to schedule a dedicated training session for your team and loop in our product specialist. We can also discuss some pricing adjustments to make sure the value matches your investment.
+
+Sarah: A training session would help, but we need concrete product improvements too. Let's see what you can pull together by next week.

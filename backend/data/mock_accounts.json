@@ -1,0 +1,23 @@
+[
+  {
+    "id": "acc-1",
+    "name": "GreenLeaf",
+    "arr": 120000.0,
+    "health_score": 95,
+    "tenure_months": 24
+  },
+  {
+    "id": "acc-2",
+    "name": "TechBridge",
+    "arr": 85000.0,
+    "health_score": 42,
+    "tenure_months": 14
+  },
+  {
+    "id": "acc-3",
+    "name": "Nova Corp",
+    "arr": 250000.0,
+    "health_score": 88,
+    "tenure_months": 36
+  }
+]
