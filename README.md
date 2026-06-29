@@ -22,10 +22,8 @@ Transform customer conversations into **explainable, policy-compliant, and human
 
 # Dashboard Preview
 
-> Replace the path below with your uploaded screenshot.
-
 <p align="center">
-<img src="docs/images/dashboard.png" width="95%">
+<img src="assets/images/dashboard-overview.png" width="95%">
 </p>
 
 ---
@@ -95,12 +93,22 @@ before becoming organizational knowledge.
 
 ---
 
+## AI Recommendation Engine
+
+The copilot analyzes customer conversations, retrieves relevant organizational knowledge, evaluates business risks, and generates explainable next-best actions. Every recommendation includes confidence scores, supporting evidence, and a Human-in-the-Loop approval workflow.
+
+<p align="center">
+<img src="assets/images/recommendation-engine.png" width="100%">
+</p>
+
+---
+
 # 🏗️ System Architecture
 
 Our platform follows a modular, layered architecture where specialized AI agents collaborate to transform customer conversations into explainable, evidence-backed recommendations.
 
 <p align="center">
-<img src="docs/images/architecture.png" width="100%">
+<img src="assets/images/architecture.jpeg" width="100%">
 </p>
 
 ---
@@ -168,7 +176,7 @@ Unlike traditional AI applications that rely on a single prompt, our platform di
 The dashboard visualizes the execution of every AI agent in real time, allowing users to monitor the complete reasoning process instead of seeing only the final response.
 
 <p align="center">
-<img src="docs/images/agent-timeline.png" width="90%">
+<img src="assets/images/ai-pipeline.png" width="90%">
 </p>
 
 ---
@@ -195,7 +203,7 @@ During execution, the Retrieval Agent performs semantic similarity search to fet
 Users can search organizational playbooks using natural language and instantly retrieve the most relevant sections through semantic search.
 
 <p align="center">
-<img src="docs/images/knowledge-base.png" width="95%">
+<img src="assets/images/knowledge-base.png" width="95%">
 </p>
 
 ---
@@ -235,7 +243,7 @@ The Dashboard serves as the central workspace where users can:
 - Perform Human-in-the-Loop approvals
 
 <p align="center">
-<img src="docs/images/dashboard.png" width="95%">
+<img src="assets/images/dashboard-overview.png" width="95%">
 </p>
 
 ---
@@ -257,7 +265,7 @@ The Accounts module provides a centralized view of all customer accounts stored 
 - Edit existing accounts
 
 <p align="center">
-<img src="docs/images/accounts.png" width="95%">
+<img src="assets/images/accounts.png" width="95%">
 </p>
 
 ---
@@ -277,7 +285,7 @@ Supported capabilities include:
 Every uploaded document is automatically chunked, embedded, and indexed into ChromaDB for semantic retrieval.
 
 <p align="center">
-<img src="docs/images/playbooks.png" width="95%">
+<img src="assets/images/knowledge-base.png" width="95%">
 </p>
 
 ---
@@ -299,7 +307,7 @@ Available metrics include:
 These metrics are dynamically generated from SQLite and update as users interact with the platform.
 
 <p align="center">
-<img src="docs/images/analytics.png" width="95%">
+<img src="assets/images/analytics.png" width="95%">
 </p>
 
 ---
@@ -319,10 +327,6 @@ Displayed information includes:
 - Environment Information
 
 This follows enterprise best practices by displaying system health rather than exposing API keys or confidential configuration.
-
-<p align="center">
-<img src="docs/images/settings.png" width="95%">
-</p>
 
 ---
 
