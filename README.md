@@ -1,174 +1,344 @@
-# Customer Success Copilot Copilot - Customer Success AI Assistant
+<div align="center">
 
-An advanced, production-grade Customer Success AI Copilot built with LangGraph, FastAPI, ChromaDB, SQLite, and React (Vite + TS). The system processes customer transcripts to detect health risks, identify opportunities, map relevant success playbooks, and generate cited, human-in-the-loop next-best-action recommendations with persistent decision memory.
+# 🚀 AI Customer Success Copilot
 
----
+### Enterprise Customer Success Intelligence Platform powered by Agentic AI
 
-## Key Features
-
-1. **Intelligent Router (Planner)**: Classifies the interaction type (QBR, renewal call, sales call, support escalation) and plans agent routing sequences dynamically.
-2. **Deterministic & Semantic Retrieval**: Ingests playbook documentation into ChromaDB and retrieves relevant rules. Also queries memory to block duplicate/rejected actions.
-3. **Reasoning Agent**: Pinpoints specific customer risks, product expansion opportunities, and missing context.
-4. **Recommendation Generator**: Proposes exactly three ranked recommendations, each with priority, confidence, and business impact context.
-5. **Explanation Agent**: Generates real evidence passages with exact quoted text citations from source playbooks.
-6. **Evaluation Gate**: Validates quality rules (e.g. discount caps, formatting checks) before allowing recommendations to reach the queue.
-7. **Human-in-the-Loop Approval & Memory**: CS managers can approve, reject (with notes), or modify recommendations. Rejected actions are stored in ChromaDB memory and SQLite audit logs, blocking similar actions from appearing in subsequent runs.
-8. **Premium Dashboard UI**: Built with responsive layouts, animated timelines, platform stats panels, and skeleton loaders.
+Transform customer conversations into **explainable, policy-compliant, and human-approved next-best actions** using a multi-agent AI architecture built with LangGraph, FastAPI, Gemini, ChromaDB, SQLite, and React.
 
 ---
 
-## Project Structure
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi)
+![LangGraph](https://img.shields.io/badge/LangGraph-Agentic%20Workflow-purple?style=for-the-badge)
+![Gemini](https://img.shields.io/badge/Gemini-2.5%20Flash-blue?style=for-the-badge)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Store-orange?style=for-the-badge)
 
+</div>
+
+---
+
+# Dashboard Preview
+
+> Replace the path below with your uploaded screenshot.
+
+<p align="center">
+<img src="docs/images/dashboard.png" width="95%">
+</p>
+
+---
+
+# Overview
+
+AI Customer Success Copilot is an enterprise decision intelligence platform that assists Customer Success Managers in making faster, smarter, and more consistent business decisions.
+
+Unlike traditional chatbots that simply answer questions, our platform combines **Agentic AI**, **Retrieval-Augmented Generation (RAG)**, **enterprise knowledge retrieval**, **persistent memory**, and **Human-in-the-Loop governance** to generate explainable next-best actions backed by organizational evidence.
+
+The platform analyzes customer conversations, understands business context, retrieves relevant company playbooks, identifies risks and opportunities, recommends actions, explains every recommendation with supporting evidence, and continuously improves from previous human decisions.
+
+---
+
+# Key Features
+
+### 🤖 Multi-Agent AI Architecture
+
+Seven specialized AI agents collaboratively perform intelligent business reasoning.
+
+- Planner Agent
+- Ingestion Agent
+- Retrieval Agent
+- Analysis Agent
+- Recommendation Agent
+- Explanation Agent
+- Evaluation Agent
+
+---
+
+### 📚 Enterprise Knowledge Retrieval
+
+- Semantic search over company playbooks
+- ChromaDB vector search
+- Evidence-backed recommendations
+- Retrieval-Augmented Generation (RAG)
+
+---
+
+### 🧠 Persistent AI Memory
+
+Rejected recommendations are remembered using semantic embeddings, preventing similar recommendations from appearing in future analyses.
+
+---
+
+### 👨‍💼 Human-in-the-Loop
+
+Every recommendation must be:
+
+- ✅ Approved
+- ✏️ Modified
+- ❌ Rejected
+
+before becoming organizational knowledge.
+
+---
+
+### 📊 Enterprise Dashboard
+
+- Portfolio Management
+- AI Pipeline Timeline
+- Knowledge Base Search
+- Analytics Dashboard
+- Platform Statistics
+- Audit Trail
+- Customer Accounts
+
+---
+
+# 🏗️ System Architecture
+
+Our platform follows a modular, layered architecture where specialized AI agents collaborate to transform customer conversations into explainable, evidence-backed recommendations.
+
+<p align="center">
+<img src="docs/images/architecture.png" width="100%">
+</p>
+
+---
+
+# 🔄 End-to-End Workflow
+
+```text
+Customer Transcript
+        │
+        ▼
+ Planner Agent
+ (Classifies Interaction)
+        │
+        ▼
+ Ingestion Agent
+ (Structures Transcript)
+        │
+        ▼
+ Retrieval Agent
+ (RAG + Customer Context)
+        │
+        ▼
+ Analysis Agent
+ (Risk & Opportunity Detection)
+        │
+        ▼
+ Recommendation Agent
+ (Next-Best Actions)
+        │
+        ▼
+ Explanation Agent
+ (Evidence & Citations)
+        │
+        ▼
+ Evaluation Agent
+ (Business Rule Validation)
+        │
+        ▼
+ Human-in-the-Loop Review
+        │
+        ▼
+ Audit Log + Memory
 ```
-.
-├── backend/
-│   ├── agents/
-│   │   ├── planner_agent.py
-│   │   ├── ingestion_agent.py
-│   │   ├── retrieval_agent.py
-│   │   ├── analysis_agent.py
-│   │   ├── recommendation_agent.py
-│   │   ├── explanation_agent.py
-│   │   ├── evaluation_agent.py
-│   │   └── state.py
-│   ├── db/
-│   │   ├── sqlite.py
-│   │   └── chroma.py
-│   ├── models/
-│   │   ├── schemas.py
-│   │   └── recommendation.py
-│   ├── services/
-│   │   ├── ingestion_service.py
-│   │   ├── memory_service.py
-│   │   └── evaluation_rules.py
-│   ├── routers/
-│   │   ├── pipeline_router.py
-│   │   └── approval_router.py
-│   ├── scripts/
-│   │   └── seed_chroma.py
-│   ├── main.py
-│   ├── config.py
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── skeletons/
-│   │   │   │   └── Skeletons.tsx
-│   │   │   ├── AccountList.tsx
-│   │   │   ├── AgentActivityTimeline.tsx
-│   │   │   ├── AgentActivityStream.tsx
-│   │   │   ├── ApprovalQueue.tsx
-│   │   │   ├── AuditLogTable.tsx
-│   │   │   ├── ConfidenceBadge.tsx
-│   │   │   ├── DashboardLayout.tsx
-│   │   │   ├── EmptyState.tsx
-│   │   │   ├── EvidencePopover.tsx
-│   │   │   ├── PlannerExplanationCard.tsx
-│   │   │   ├── PlatformStatsPanel.tsx
-│   │   │   ├── RecommendationCard.tsx
-│   │   │   ├── RiskBadge.tsx
-│   │   │   ├── ToastProvider.tsx
-│   │   │   └── TranscriptUpload.tsx
-│   │   ├── lib/
-│   │   │   └── api.ts
-│   │   ├── App.tsx
-│   │   ├── index.css
-│   │   └── main.tsx
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── index.html
-├── docs/
-│   ├── ARCHITECTURE.md
-│   └── DEMO_SCRIPT.md
-├── test_phase5.py
-└── README.md
-```
 
 ---
 
-## Setup & Running Guide
+# 🤖 AI Agent Pipeline
 
-### 1. Backend Installation & Running
+Unlike traditional AI applications that rely on a single prompt, our platform distributes responsibilities across multiple specialized AI agents.
 
-Ensure you have Python 3.10+ installed.
-
-1. Navigate to the `backend/` directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Set your LLM Provider Key (Optional, fallback modes are integrated automatically):
-   ```bash
-   # On Windows (cmd):
-   set GEMINI_API_KEY=your_gemini_key
-   # On Windows (PowerShell):
-   $env:GEMINI_API_KEY="your_gemini_key"
-   # On macOS/Linux:
-   export GEMINI_API_KEY="your_gemini_key"
-   ```
-5. Ingest playbook documentation into ChromaDB:
-   ```bash
-   python scripts/seed_chroma.py --force
-   ```
-6. Start the FastAPI backend:
-   ```bash
-   python -m uvicorn backend.main:app --port 8000 --host 127.0.0.1
-   ```
-   API docs will be live at: `http://localhost:8000/docs`
+| Agent | Responsibility |
+|--------|----------------|
+| 🧭 Planner | Determines interaction type and execution path |
+| 📥 Ingestion | Structures transcript and extracts key entities |
+| 📚 Retrieval | Retrieves relevant playbooks and customer history |
+| 🔍 Analysis | Detects churn risks and business opportunities |
+| 💡 Recommendation | Generates ranked next-best actions |
+| 📝 Explanation | Grounds every recommendation with evidence |
+| ✅ Evaluation | Validates recommendations against business rules |
 
 ---
 
-### 2. Frontend Installation & Running
+# ⚡ Agent Execution Timeline
 
-Ensure you have Node.js (v18+) and npm installed.
+The dashboard visualizes the execution of every AI agent in real time, allowing users to monitor the complete reasoning process instead of seeing only the final response.
 
-1. Navigate to the `frontend/` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite React development server:
-   ```bash
-   npm run dev
-   ```
-   The dashboard will be live at: `http://localhost:5173`
+<p align="center">
+<img src="docs/images/agent-timeline.png" width="90%">
+</p>
 
 ---
 
-## Running the Acceptance Tests
+# 📖 Retrieval-Augmented Generation (RAG)
 
-Verify the end-to-end functionality of all phases:
+Enterprise playbooks are converted into semantic embeddings and stored in **ChromaDB**.
 
-```bash
-# In the workspace root:
-python test_phase5.py
-```
-This test checks the human approval pipeline, database persistence, and memory-aware recommendation blocking.
+During execution, the Retrieval Agent performs semantic similarity search to fetch the most relevant organizational knowledge, ensuring every recommendation is grounded in company policies rather than relying solely on the language model.
+
+### Knowledge Sources
+
+- Customer Success Playbooks
+- Renewal Guidelines
+- Escalation Policies
+- Pricing Policies
+- Product Documentation
+- Customer History
 
 ---
 
-## Demo Script
+# 📚 Knowledge Base Search
 
-To walk through a complete end-to-end live flow of the system:
-1. Open the UI at `http://localhost:5173/`.
-2. Select **TechBridge** from the portfolio.
-3. Paste or upload the contents of `backend/data/demo_transcript.txt` and click **Run Analysis**.
-4. Observe the `AgentActivityTimeline` animating live.
-5. Review the recommendations, approve one, and reject another with a note.
-6. Re-run the analysis for the same account to observe the memory blocking duplicate/similar actions.
-7. Check the Platform Health Panel stats.
-*(See [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) for full script details)*
+Users can search organizational playbooks using natural language and instantly retrieve the most relevant sections through semantic search.
+
+<p align="center">
+<img src="docs/images/knowledge-base.png" width="95%">
+</p>
+
+---
+
+# 🧠 Human-in-the-Loop + Memory
+
+Every recommendation requires human review before becoming actionable.
+
+Managers can:
+
+- ✅ Approve
+- ❌ Reject
+- ✏️ Modify
+
+Rejected recommendations are embedded and stored in **ChromaDB Memory**, allowing the Recommendation Agent to avoid suggesting semantically similar actions in future analyses.
+
+This creates a continuously improving decision-making system while maintaining full transparency and governance.
+
+---
+
+# 📊 Platform Modules
+
+AI Customer Success Copilot is designed as a complete enterprise platform with dedicated modules for Customer Success Managers, enabling seamless management of customer interactions, organizational knowledge, analytics, and AI-powered decision making.
+
+---
+
+# 🏠 Dashboard
+
+The Dashboard serves as the central workspace where users can:
+
+- Monitor portfolio health
+- Upload customer interaction transcripts
+- Run the AI pipeline
+- Review recommendations
+- View platform statistics
+- Monitor AI agent execution
+- Perform Human-in-the-Loop approvals
+
+<p align="center">
+<img src="docs/images/dashboard.png" width="95%">
+</p>
+
+---
+
+# 👥 Customer Accounts
+
+The Accounts module provides a centralized view of all customer accounts stored in SQLite.
+
+### Features
+
+- Portfolio overview
+- Customer health score
+- ARR tracking
+- Renewal dates
+- Risk levels
+- Last interaction
+- Customer history
+- Add new customer accounts
+- Edit existing accounts
+
+<p align="center">
+<img src="docs/images/accounts.png" width="95%">
+</p>
+
+---
+
+# 📚 Playbooks Knowledge Base
+
+The Knowledge Base allows organizations to manage the documents that power the RAG pipeline.
+
+Supported capabilities include:
+
+- Upload Markdown playbooks
+- Semantic search
+- View indexed documents
+- Inspect retrieved evidence
+- Organize organizational knowledge
+
+Every uploaded document is automatically chunked, embedded, and indexed into ChromaDB for semantic retrieval.
+
+<p align="center">
+<img src="docs/images/playbooks.png" width="95%">
+</p>
+
+---
+
+# 📈 Analytics Dashboard
+
+The Analytics module provides operational insights into the AI platform.
+
+Available metrics include:
+
+- Total Pipeline Runs
+- Average Confidence Score
+- Approval Rate
+- Recommendation Distribution
+- Customer Risk Distribution
+- AI Performance Metrics
+- Platform Health Statistics
+
+These metrics are dynamically generated from SQLite and update as users interact with the platform.
+
+<p align="center">
+<img src="docs/images/analytics.png" width="95%">
+</p>
+
+---
+
+# ⚙️ System Settings
+
+The Settings page provides operational visibility into the platform without exposing sensitive credentials.
+
+Displayed information includes:
+
+- AI Model Status
+- Database Connectivity
+- ChromaDB Status
+- SQLite Status
+- Platform Version
+- Theme Preferences
+- Environment Information
+
+This follows enterprise best practices by displaying system health rather than exposing API keys or confidential configuration.
+
+<p align="center">
+<img src="docs/images/settings.png" width="95%">
+</p>
+
+---
+
+# 🛠 Technology Stack
+
+| Category | Technologies |
+|-----------|--------------|
+| **Frontend** | React, TypeScript, Vite, Tailwind CSS |
+| **Backend** | FastAPI, Python |
+| **AI Orchestration** | LangGraph |
+| **LLM** | Gemini 2.5 Flash |
+| **Vector Database** | ChromaDB |
+| **Relational Database** | SQLite |
+| **Knowledge Retrieval** | Retrieval-Augmented Generation (RAG) |
+| **Memory** | Semantic Vector Memory |
+| **APIs** | REST APIs |
+| **Deployment Ready** | Modular Enterprise Architecture |
+
+---
