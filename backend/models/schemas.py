@@ -5,6 +5,10 @@ class AccountBase(BaseModel):
     arr: float
     health_score: int
     tenure_months: int
+    industry: str | None = "Technology"
+    renewal_date: str | None = "2026-12-31"
+    risk_level: str | None = "Low"
+    last_interaction: str | None = "2026-06-01"
 
 class AccountCreate(AccountBase):
     id: str | None = None

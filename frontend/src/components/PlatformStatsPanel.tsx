@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Activity, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Activity, TrendingUp, CheckCircle2, Users } from 'lucide-react';
 import { getPlatformStats } from '../lib/api';
-import type { PlatformStats } from '../lib/api';
+import type { PlatformStats, Recommendation } from '../lib/api';
 import { StatsSkeleton } from './skeletons/Skeletons';
 
 interface PlatformStatsPanelProps {
   refreshKey?: number;
+  activeRecommendations?: Recommendation[];
+  totalAccounts?: number;
 }
 
-export const PlatformStatsPanel: React.FC<PlatformStatsPanelProps> = ({ refreshKey = 0 }) => {
+export const PlatformStatsPanel: React.FC<PlatformStatsPanelProps> = ({ 
+  refreshKey = 0,
+  activeRecommendations,
+  totalAccounts
+}) => {
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +31,18 @@ export const PlatformStatsPanel: React.FC<PlatformStatsPanelProps> = ({ refreshK
   if (!stats) return null;
 
   const approvalPct = Math.round(stats.approval_rate * 100);
-  const avgConf = Math.round(stats.avg_confidence * 100);
+  
+  // Calculate average confidence dynamically if recommendations are active, otherwise fall back to database average
+  let avgConf = Math.round(stats.avg_confidence * 100);
+  let isDynamic = false;
+  if (activeRecommendations && activeRecommendations.length > 0) {
+    const totalConf = activeRecommendations.reduce((sum, r) => sum + r.confidence, 0);
+    avgConf = Math.round((totalConf / activeRecommendations.length) * 100);
+    isDynamic = true;
+  }
+
+  // Calculate portfolio accounts dynamically if passed from parent, otherwise fall back to database count
+  const accountsCount = totalAccounts !== undefined ? totalAccounts : (stats as any).total_accounts || 0;
 
   const cards = [
     {
@@ -39,7 +56,7 @@ export const PlatformStatsPanel: React.FC<PlatformStatsPanelProps> = ({ refreshK
       label: 'Avg Confidence',
       value: `${avgConf}%`,
       icon: <TrendingUp className="h-4 w-4 text-violet-500" />,
-      sub: avgConf >= 80 ? 'High quality signals' : avgConf >= 60 ? 'Moderate signals' : 'Low confidence',
+      sub: isDynamic ? 'Active run average' : (avgConf >= 80 ? 'High quality signals' : 'Moderate signals'),
       color: avgConf >= 80 ? 'text-emerald-600 dark:text-emerald-400' : avgConf >= 60 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400',
     },
     {
@@ -49,10 +66,17 @@ export const PlatformStatsPanel: React.FC<PlatformStatsPanelProps> = ({ refreshK
       sub: approvalPct >= 70 ? 'Strong human alignment' : 'Room to improve',
       color: approvalPct >= 70 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400',
     },
+    {
+      label: 'Portfolio Accounts',
+      value: accountsCount.toString(),
+      icon: <Users className="h-4 w-4 text-violet-500" />,
+      sub: 'Managed client profiles',
+      color: 'text-violet-650 dark:text-violet-400',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 animate-slide-up">
+    <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 animate-slide-up">
       {cards.map((card) => (
         <div
           key={card.label}

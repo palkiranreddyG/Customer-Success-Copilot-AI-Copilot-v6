@@ -1,0 +1,62 @@
+# Customer Health Playbook
+
+## Health Score Guidelines
+
+Customer health is measured using product adoption, support experience, executive engagement, and business outcomes.
+
+### Healthy Account
+
+Health Score: 80-100
+
+Characteristics:
+
+- High product adoption
+- Positive executive engagement
+- Few support tickets
+- Quarterly business reviews completed
+- Renewal confidence is high
+
+Recommended Actions:
+
+- Identify expansion opportunities.
+- Introduce advanced platform capabilities.
+- Schedule executive roadmap reviews.
+
+---
+
+### Moderate Risk
+
+Health Score: 60-79
+
+Characteristics:
+
+- Reduced product usage
+- Delayed onboarding milestones
+- Increased support requests
+- Limited executive participation
+
+Recommended Actions:
+
+- Conduct customer success review.
+- Schedule product training.
+- Monitor adoption weekly.
+
+---
+
+### High Risk
+
+Health Score: Below 60
+
+Characteristics:
+
+- Declining product adoption
+- Executive dissatisfaction
+- Multiple unresolved tickets
+- Renewal uncertainty
+
+Required Actions:
+
+- Escalate to Customer Success Director.
+- Schedule executive business review.
+- Create a 30-day recovery plan.
+- Assign a dedicated success manager.

@@ -70,7 +70,12 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommen
 
         {evidence && (
           <div className="pt-2 flex justify-start border-t border-slate-200/50 dark:border-slate-800/80">
-            <EvidencePopover evidence={evidence} title={action_title} />
+            <EvidencePopover 
+              evidence={evidence} 
+              title={action_title} 
+              businessImpact={business_impact}
+              confidence={confidence}
+            />
           </div>
         )}
       </div>

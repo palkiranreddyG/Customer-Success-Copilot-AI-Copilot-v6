@@ -46,18 +46,17 @@ app.add_middleware(
 
 from backend.routers.pipeline_router import router as pipeline_router
 from backend.routers.approval_router import router as approval_router
+from backend.routers.accounts_router import router as accounts_router
+from backend.routers.kb_router import router as kb_router
+
 app.include_router(pipeline_router, prefix="/api/v1/pipeline", tags=["pipeline"])
 app.include_router(approval_router)
-
+app.include_router(accounts_router)
+app.include_router(kb_router)
 
 @app.get("/api/v1/health", response_model=HealthResponse)
 async def health_check():
     return HealthResponse(status="ok")
-
-@app.get("/api/v1/accounts", response_model=list[Account])
-async def list_accounts():
-    accounts_data = get_all_accounts()
-    return [Account(**acc) for acc in accounts_data]
 
 @app.get("/api/v1/kb/search", response_model=SearchResponse)
 async def kb_search(
@@ -83,7 +82,7 @@ async def kb_search(
 # ── Platform Stats endpoint ─────────────────────────────────────────────────
 @app.get("/api/v1/platform/stats")
 async def platform_stats():
-    """Aggregate stats: total runs, avg confidence, approval rate."""
+    """Aggregate stats: total runs, avg confidence, approval rate, total accounts."""
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -105,9 +104,13 @@ async def platform_stats():
     ).fetchone()[0]
     approval_rate = (approved_count / total_decisions) if total_decisions > 0 else 0.0
 
+    # Total accounts
+    total_accounts = cur.execute("SELECT COUNT(*) FROM accounts").fetchone()[0]
+
     conn.close()
     return {
         "total_runs": total_runs,
         "avg_confidence": round(avg_confidence, 4),
         "approval_rate": round(approval_rate, 4),
+        "total_accounts": total_accounts,
     }

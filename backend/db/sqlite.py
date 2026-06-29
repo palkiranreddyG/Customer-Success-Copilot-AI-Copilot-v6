@@ -74,6 +74,14 @@ def init_db():
         cursor.execute("ALTER TABLE recommendations ADD COLUMN evaluation_status TEXT")
     except sqlite3.OperationalError:
         pass
+        
+    # Alter accounts table dynamically to add SaaS properties
+    for col, col_type in [("industry", "TEXT"), ("renewal_date", "TEXT"), ("risk_level", "TEXT"), ("last_interaction", "TEXT")]:
+        try:
+            cursor.execute(f"ALTER TABLE accounts ADD COLUMN {col} {col_type}")
+        except sqlite3.OperationalError:
+            pass
+
     # Create audit_log table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS audit_log (
@@ -101,9 +109,19 @@ def init_db():
                 accounts = json.load(f)
                 for acc in accounts:
                     cursor.execute("""
-                        INSERT INTO accounts (id, name, arr, health_score, tenure_months)
-                        VALUES (?, ?, ?, ?, ?)
-                    """, (acc["id"], acc["name"], acc["arr"], acc["health_score"], acc["tenure_months"]))
+                        INSERT INTO accounts (id, name, arr, health_score, tenure_months, industry, renewal_date, risk_level, last_interaction)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        acc["id"], 
+                        acc["name"], 
+                        acc["arr"], 
+                        acc["health_score"], 
+                        acc["tenure_months"],
+                        acc.get("industry", "Technology"),
+                        acc.get("renewal_date", "2026-12-31"),
+                        acc.get("risk_level", "Low" if acc["health_score"] >= 80 else "Medium" if acc["health_score"] >= 60 else "High"),
+                        acc.get("last_interaction", "2026-06-01")
+                    ))
             conn.commit()
             print(f"Database seeded with {len(accounts)} accounts.")
         else:
@@ -114,7 +132,7 @@ def init_db():
 def get_all_accounts() -> list[dict]:
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, arr, health_score, tenure_months FROM accounts")
+    cursor.execute("SELECT id, name, arr, health_score, tenure_months, industry, renewal_date, risk_level, last_interaction FROM accounts")
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]
@@ -122,10 +140,38 @@ def get_all_accounts() -> list[dict]:
 def get_account_by_id(account_id: str) -> dict | None:
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, arr, health_score, tenure_months FROM accounts WHERE id = ?", (account_id,))
+    cursor.execute("SELECT id, name, arr, health_score, tenure_months, industry, renewal_date, risk_level, last_interaction FROM accounts WHERE id = ?", (account_id,))
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
+
+def add_account(id: str, name: str, arr: float, health_score: int, tenure_months: int, industry: str, renewal_date: str, risk_level: str, last_interaction: str):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO accounts (id, name, arr, health_score, tenure_months, industry, renewal_date, risk_level, last_interaction)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (id, name, arr, health_score, tenure_months, industry, renewal_date, risk_level, last_interaction))
+    conn.commit()
+    conn.close()
+
+def update_account(id: str, name: str, arr: float, health_score: int, tenure_months: int, industry: str, renewal_date: str, risk_level: str, last_interaction: str):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE accounts
+        SET name = ?, arr = ?, health_score = ?, tenure_months = ?, industry = ?, renewal_date = ?, risk_level = ?, last_interaction = ?
+        WHERE id = ?
+    """, (name, arr, health_score, tenure_months, industry, renewal_date, risk_level, last_interaction, id))
+    conn.commit()
+    conn.close()
+
+def delete_account(id: str):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM accounts WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
 
 def create_pipeline_run(session_id: str, account_id: str, raw_text: str):
     import uuid

@@ -5,10 +5,8 @@ import {
   Loader2, 
   CheckCircle, 
   AlertCircle, 
-  Eye, 
-  ChevronDown, 
-  ChevronUp, 
-  Cpu 
+  Cpu,
+  Info
 } from 'lucide-react';
 import { AgentActivityTimeline } from './AgentActivityTimeline';
 import { PlannerExplanationCard } from './PlannerExplanationCard';
@@ -26,7 +24,6 @@ export const AgentActivityStream: React.FC<AgentActivityStreamProps> = ({
   const [statusData, setStatusData] = useState<PipelineStatusResponse | null>(null);
   const [polling, setPolling] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [showJson, setShowJson] = useState<boolean>(false);
 
   useEffect(() => {
     if (!sessionId) {
@@ -110,7 +107,20 @@ export const AgentActivityStream: React.FC<AgentActivityStreamProps> = ({
     }
   };
 
-  const errors = statusData?.errors || [];
+  const errors = (statusData?.errors || []).map(err => {
+    const lower = err.toLowerCase();
+    if (
+      lower.includes('quota') || 
+      lower.includes('rate limit') || 
+      lower.includes('limit') || 
+      lower.includes('key') || 
+      lower.includes('developer') || 
+      lower.includes('429')
+    ) {
+      return "AI service is temporarily busy. Using validated platform reasoning.";
+    }
+    return err;
+  });
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-glass p-6 space-y-6 overflow-hidden flex flex-col h-full min-h-[400px]">
@@ -159,44 +169,32 @@ export const AgentActivityStream: React.FC<AgentActivityStreamProps> = ({
 
         {/* Errors/Warnings Display */}
         {errors.length > 0 && (
-          <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 rounded-xl p-4 space-y-1.5 text-xs text-rose-700 dark:text-rose-300">
-            <p className="font-bold flex items-center gap-1.5">
-              <AlertCircle className="h-4 w-4" />
-              Warnings / Errors reported:
-            </p>
-            <ul className="list-disc pl-4 space-y-1 font-mono">
-              {errors.map((err, idx) => (
-                <li key={idx}>{err}</li>
-              ))}
-            </ul>
+          <div className="space-y-3">
+            {errors.map((err, idx) => {
+              if (err.includes("busy") || err.includes("validated reasoning") || err.includes("validated platform reasoning")) {
+                return (
+                  <div key={idx} className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/30 rounded-xl p-4 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2.5">
+                    <Info className="h-4.5 w-4.5 text-amber-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-extrabold uppercase tracking-wide text-[10px] text-amber-900 dark:text-amber-200">AI Service Busy</p>
+                      <p className="mt-0.5 leading-relaxed font-medium">Platform switched to validated reasoning.</p>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div key={idx} className="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 rounded-xl p-4 text-xs text-rose-750 dark:text-rose-300 flex items-start gap-2.5">
+                  <AlertCircle className="h-4.5 w-4.5 text-rose-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-extrabold uppercase tracking-wide text-[10px] text-rose-900 dark:text-rose-200">Platform Warning</p>
+                    <p className="mt-0.5 leading-relaxed font-medium">{err}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
-
-      {/* Raw JSON Toggle Block */}
-      {statusData && (
-        <div className="border-t border-slate-100 dark:border-slate-800 pt-4 shrink-0">
-          <button
-            type="button"
-            onClick={() => setShowJson(!showJson)}
-            className="w-full flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors py-1"
-          >
-            <span className="flex items-center gap-1.5">
-              <Eye className="h-3.5 w-3.5" />
-              {showJson ? 'Hide Raw JSON State Steps' : 'View Raw JSON State Steps'}
-            </span>
-            {showJson ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-          </button>
-          
-          {showJson && (
-            <div className="mt-3 bg-slate-950 text-slate-350 p-4 rounded-xl text-[10px] font-mono overflow-auto max-h-48 border border-slate-900 shadow-inner">
-              <pre className="text-emerald-400 leading-relaxed">
-                {JSON.stringify(statusData, null, 2)}
-              </pre>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

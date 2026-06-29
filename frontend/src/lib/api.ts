@@ -4,6 +4,10 @@ export interface Account {
   arr: number;
   health_score: number;
   tenure_months: number;
+  industry?: string;
+  renewal_date?: string;
+  risk_level?: string;
+  last_interaction?: string;
 }
 
 export interface ChunkResult {
@@ -166,6 +170,103 @@ export async function getPlatformStats(): Promise<PlatformStats> {
   const response = await fetch(`${API_BASE_URL}/platform/stats`);
   if (!response.ok) {
     throw new Error(`Failed to fetch platform stats: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+// ── Playbook KB APIs ────────────────────────────────────────────────────────
+export interface PlaybookFile {
+  name: string;
+  size_bytes: number;
+  suffix: string;
+  chunk_count: number;
+  indexed: boolean;
+}
+
+export interface PlaybookContent {
+  name: string;
+  content: string;
+  chunks: { id: string; text: string; section: string }[];
+}
+
+export async function getPlaybooks(): Promise<PlaybookFile[]> {
+  const response = await fetch(`${API_BASE_URL}/kb/playbooks`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch playbooks: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function getPlaybookContent(filename: string): Promise<PlaybookContent> {
+  const response = await fetch(`${API_BASE_URL}/kb/playbooks/${filename}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch playbook content: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function uploadPlaybook(file: File): Promise<{ status: string; filename: string; chunks_indexed: number }> {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await fetch(`${API_BASE_URL}/kb/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    throw new Error(errorBody.detail || `Failed to upload playbook: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function deletePlaybook(filename: string): Promise<{ status: string; filename: string }> {
+  const response = await fetch(`${API_BASE_URL}/kb/playbooks/${filename}`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to delete playbook: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+// ── Account CRUD APIs ───────────────────────────────────────────────────────
+export async function addAccount(account: Omit<Account, 'id'> & { id?: string }): Promise<Account> {
+  const response = await fetch(`${API_BASE_URL}/accounts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(account)
+  });
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    throw new Error(errorBody.detail || `Failed to add account: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function updateAccount(id: string, account: Omit<Account, 'id'>): Promise<Account> {
+  const response = await fetch(`${API_BASE_URL}/accounts/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(account)
+  });
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    throw new Error(errorBody.detail || `Failed to update account: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function deleteAccount(id: string): Promise<{ status: string; id: string }> {
+  const response = await fetch(`${API_BASE_URL}/accounts/${id}`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to delete account: ${response.statusText}`);
   }
   return response.json();
 }

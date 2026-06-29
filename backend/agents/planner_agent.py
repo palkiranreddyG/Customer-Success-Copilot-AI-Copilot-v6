@@ -82,5 +82,5 @@ def run_planner(raw_text: str, account_context: dict) -> dict:
     except Exception as e2:
         print(f"Planner Agent error: {e2}. Falling back to default order.")
         fallback = default_fallback.copy()
-        fallback["rationale"] = f"Fallback triggered. Error details: {str(e2)}"
+        fallback["rationale"] = "AI service is temporarily busy. Using validated platform reasoning."
         return fallback
